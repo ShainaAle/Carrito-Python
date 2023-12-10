@@ -13,7 +13,7 @@ def apagar():
     print("Comando enviado: apagar")
     estado_label.config(text="Estado: apagado")
 
-def set_Velocidad(valor):
+def set_velocidad(valor):
     valor_str = "Velocidad: " + str(valor) + "\n"  # Convierte el valor a una cadena
     ser.write(valor_str.encode())  # Envía el valor de velocidad como una cadena
     print(f"Velocidad ajustada a: {valor}")
@@ -24,10 +24,13 @@ def recibir_datos():
             dato = ser.readline().decode().strip()  # Lee un dato del puerto serie
             print(f"Dato recibido desde Micro:bit: {dato}")
             
-            # Actualiza la etiqueta con la posición del objeto
-            objeto_label.config(text=f"Objeto en: {dato}")
-            
-        except serial.SerialException:
+            # Actualiza la etiqueta con el valor del objeto si es un número o cualquier cadena no vacía
+            if dato.isdigit() or dato:
+                objeto = int(dato) if dato.isdigit() else None
+                objeto_label.config(text=f"Objeto en: {objeto} cm" if objeto is not None else "Objeto en: N/A")
+
+        except serial.SerialException as e:
+            print(f"Error en la recepción de datos: {e}")
             break
 
 def mover_derecha():
@@ -75,11 +78,11 @@ boton_apagar_todos = tk.Button(ventana, text="Apagar", command=apagar, bg="light
 boton_encender_todos.pack(pady=10)
 boton_apagar_todos.pack(pady=10)
 
-volumen_scale = tk.Scale(ventana, from_=0, to=100, orient="horizontal", label="Velocidad", command=set_Velocidad)
+volumen_scale = tk.Scale(ventana, from_=0, to=100, orient="horizontal", label="Velocidad", command=set_velocidad)
 volumen_scale.pack(pady=10)
 
 # Etiqueta para mostrar la posición del objeto
-objeto_label = tk.Label(ventana, text="Objeto en: ")
+objeto_label = tk.Label(ventana, text="Objeto en: N/A")
 objeto_label.pack(pady=10)
 
 # Botones para las flechas en forma de cruzeta
