@@ -14,7 +14,7 @@ def apagar():
     estado_label.config(text="Estado: apagado")
 
 def set_Velocidad(valor):
-    valor_str = str(valor) + "\n"  # Convierte el valor a una cadena
+    valor_str = "Velocidad: " + str(valor) + "\n"  # Convierte el valor a una cadena
     ser.write(valor_str.encode())  # Envía el valor de velocidad como una cadena
     print(f"Velocidad ajustada a: {valor}")
 
